@@ -78,7 +78,7 @@ for idx in range(len(word_con)):
         word_text = re.sub('"', '', word_con[idx])
         phone_join = ' '.join(phone_con[idx])
         phone_text = re.sub('"', '', phone_join)
-        context.append(word_text + '\t' + phone_text + '\n')
+        context.append(word_text + '\t' + phone_text + ' \n')
 final_context=list(set(context))
 final_context.sort()
 

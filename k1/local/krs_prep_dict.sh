@@ -1,5 +1,7 @@
 #!/bin/bash
-# EMCS Labs
+# 														EMCS Labs
+# 														Hyungwon Yang
+# 														hyung8758@gmail.com
 
 # This scripts generate dictionray related parts.
 # lexicon, lexiconp, silence, nonsilence, optional_silence, extra_questions
