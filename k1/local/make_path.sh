@@ -13,6 +13,11 @@ fi
 
 kaldi=$1
 
+if [ -f $PWD/path.sh ]; then 
+	echo "" > path.sh
+	echo "Previously written path.sh is removed."
+fi
+
 # KALDI_ROOT
 export KALDI_ROOT=$kaldi
 if [ -f $KALDI_ROOT/tools/env.sh ]; then
@@ -44,3 +49,5 @@ export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$PWD:$PATH
 . $KALDI_ROOT/tools/config/common_path.sh
 export LC_ALL=C
 EOL
+
+echo "path.sh is newly wirtten."

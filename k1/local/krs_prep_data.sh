@@ -22,8 +22,8 @@ data=$1
 # Result directory: ./data/local/data
 save=$2
 
-echo ========================================================================
-echo "                              NOTICE                                  "
+echo ======================================================================
+echo "                              NOTICE                                "
 echo ""
 echo "CURRENT SHELL: $0"
 echo -e "INPUT ARGUMENTS:\n$@"
@@ -32,7 +32,7 @@ echo -e "INPUT ARGUMENTS:\n$@"
 if [ ! -d $data ]; then
 	echo "Corpus data is not present." && exit 1
 	echo ""
-	echo ========================================================================
+	echo ======================================================================
 fi
 for check in text utt2spk spk2utt wav.scp segments glm stm ; do
 	if [ -f $save/$check ] && [ ! -z $save/$check ]; then
@@ -40,7 +40,7 @@ for check in text utt2spk spk2utt wav.scp segments glm stm ; do
 	fi
 done
 echo ""
-echo ========================================================================
+echo ======================================================================
 
 # text
 if [ ! -d $save ]; then
@@ -151,7 +151,8 @@ if [ -f $save/wav.scp ] && [ ! -z $save/wav.scp ]; then
 
 		for snt in `seq 1 $snt_num`; do
 			get_snt=`echo $snt_list | cut -d' ' -f$snt`
-			echo "$get_snt $data/$data_name/$get_snt" >> $save/wav.scp || exit 1
+			wav_snt=`echo $get_snt | sed 's/.wav//g'`
+			echo "$wav_snt $data/$data_name/$get_snt" >> $save/wav.scp || exit 1
 		done
 	done
 	sed '1d' $save/wav.scp > $save/tmp; cat $save/tmp > $save/wav.scp; rm $save/tmp
@@ -167,7 +168,8 @@ else
 
 		for snt in `seq 1 $snt_num`; do
 			get_snt=`echo $snt_list | cut -d' ' -f$snt`
-			echo "$get_snt $data/$data_name/$get_snt" >> $save/wav.scp || exit 1
+			wav_snt=`echo $get_snt | sed 's/.wav//g'`
+			echo "$wav_snt $data/$data_name/$get_snt" >> $save/wav.scp || exit 1
 		done
 	done
 fi
@@ -190,9 +192,10 @@ if [ -f $save/segments ] && [ ! -z $save/segments ]; then
 
 		for snt in `seq 1 $snt_num`; do
 			get_snt=`echo $snt_list | cut -d' ' -f$snt`
+			wav_snt=`echo $get_snt | sed 's/.TextGrid//g'`
 			time1=`cat $data/$data_name/$get_snt | sed '1,/"word"/d' | sed -n '1p'`
 			time2=`cat $data/$data_name/$get_snt | sed '1,/"word"/d' | sed -n '2p'`
-			echo "$get_snt $get_snt $time1 $time2" >> $save/segments || exit 1
+			echo "$wav_snt $wav_snt $time1 $time2" >> $save/segments || exit 1
 		done
 	done
 	sed '1d' $save/segments > $save/tmp; cat $save/tmp > $save/segments; rm $save/tmp
@@ -208,9 +211,10 @@ else
 
 		for snt in `seq 1 $snt_num`; do
 			get_snt=`echo $snt_list | cut -d' ' -f$snt`
+			wav_snt=`echo $get_snt | sed 's/.TextGrid//g'`
 			time1=`cat $data/$data_name/$get_snt | sed '1,/"word"/d' | sed -n '1p'`
 			time2=`cat $data/$data_name/$get_snt | sed '1,/"word"/d' | sed -n '2p'`
-			echo "$get_snt $get_snt $time1 $time2" >> $save/segments || exit 1
+			echo "$wav_snt $wav_snt $time1 $time2" >> $save/segments || exit 1
 		done
 	done
 fi

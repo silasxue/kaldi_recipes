@@ -1,20 +1,9 @@
 #!/bin/bash
 
-# This scripts generate prerequsite datasets 
-# ./data/train => text, utt2spk, wav.scp, segments, glm, stm 
-# ./conf => phones.60-48-39.map 
-# ./local/dict => lexicon.txt
-# ./wavtxt => raw wav와 txt 파일
-echo "======================================================"
-echo "                  data preparation				    "
-echo "======================================================"
+# first 
+mono_opt='--boost-silence 1.25 --nj 2 --cmd $train_cmd'
+steps/train_mono.sh $mono_opt $curdir/data/train $curdir/data/lang $curdir/exp/mono
 
-# utt2spk
+# second
 
-# wav.scp
-
-# segments
-
-# glm
-
-# stm
+steps/train_mono.sh --boost-silence 1.25 --nj 2 --cmd $train_cmd $curdir/data/train $curdir/data/lang $curdir/exp/mono
