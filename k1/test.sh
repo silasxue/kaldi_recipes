@@ -1,9 +1,8 @@
 #!/bin/bash
 
-# first 
-mono_opt='--boost-silence 1.25 --nj 2 --cmd $train_cmd'
-steps/train_mono.sh $mono_opt $curdir/data/train $curdir/data/lang $curdir/exp/mono
+new1=string
+new2=nice
 
-# second
-
-steps/train_mono.sh --boost-silence 1.25 --nj 2 --cmd $train_cmd $curdir/data/train $curdir/data/lang $curdir/exp/mono
+for box in new1 new2; do
+	echo ${!box}
+done

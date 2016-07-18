@@ -22,7 +22,14 @@ fi
 newtime=$(($in_end - $in_start))
 
 # Conver it to 00:00:00 format.
-outtime=`date -u -r $newtime +%T`
+myos=`uname`
+if [ $myos == "Linux" ]; then
+	outtime=`date -u -d @${newtime} +%T`
+	echo linux
+else
+	outtime=`date -u -r $newtime +%T`
+	echo osx
+fi
 
 # Print the result.
 echo $outtime

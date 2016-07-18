@@ -20,6 +20,9 @@ source=/Users/hyungwonyang/Documents/data/krs_data
 logfile=1st_test
 # current directory.
 curdir=$PWD
+# Number of jobs.
+nj=2
+
 
 # Start logging.
 mkdir -p $curdir/log
@@ -140,8 +143,8 @@ echo $log_s4 >> $logdir/$logfile.log
 echo START TIME: $log_s4 | tee -a $logdir/$logfile.log 
 
 # Monophone option setting.
-mono_train_opt="--boost-silence 1.25 --nj 2 --cmd $train_cmd"
-mono_decode_opt="--nj $train_nj --cmd $decode_cmd"
+mono_train_opt="--boost-silence 1.25 --nj $nj --cmd $train_cmd"
+mono_decode_opt="--nj $nj --cmd $decode_cmd"
 echo "Monophone trainig options: $mono_train_opt"
 echo "Monophone decoding options: $mono_decode_opt"
 
@@ -186,10 +189,10 @@ echo $log_s5 >> $logdir/$logfile.log
 echo START TIME: $log_s5 | tee -a $logdir/$logfile.log 
 
 # Triphone1 option setting.
-tri1_trian_opt="--cmd $train_cmd"
-tri1_decode_opt="--nj $train_nj --cmd $decode_cmd"
-echo "Triphone1 trainig options: $tri1_train_opt"
-echo "Tirphone1 decoding options: $tir1_decode_opt"
+tri1_train_opt="--cmd $train_cmd"
+tri1_decode_opt="--nj $nj --cmd $decode_cmd"
+echo "Triphone1 training options: $tri1_train_opt"
+echo "Triphone1 decoding options: $tri1_decode_opt"
 
 # Triphone1 training.
 steps/train_deltas.sh $tri1_train_opt 2000 10000 $curdir/data/train $curdir/data/lang $curdir/exp/mono_ali $curdir/exp/tri1
@@ -218,13 +221,13 @@ echo $log_s6 >> $logdir/$logfile.log
 echo START TIME: $log_s6 | tee -a $logdir/$logfile.log 
 
 # Triphone2 option setting.
-tri2_trian_opt="--cmd $train_cmd"
-tri2_decode_opt="--nj $train_nj --cmd $decode_cmd"
+tri2_train_opt="--cmd $train_cmd"
+tri2_decode_opt="--nj $nj --cmd $decode_cmd"
 echo "Triphone2 trainig options: $tri2_train_opt"
-echo "Tirphone2 decoding options: $tir2_decode_opt"
+echo "Triphone2 decoding options: $tri2_decode_opt"
 
 # Triphone2 training.
-steps/train_lda_mllt.sh tri2_trian_opt 2500 15000 $curdir/data/train $curdir/data/lang $curdir/exp/tri1_ali $curdir/exp/tri2
+steps/train_lda_mllt.sh $tri2_train_opt 2500 15000 $curdir/data/train $curdir/data/lang $curdir/exp/tri1_ali $curdir/exp/tri2
 
 # Graph drawing.
 utils/mkgraph.sh $curdir/data/lang $curdir/exp/tri2 $curdir/exp/tri2/graph
@@ -250,10 +253,10 @@ echo $log_s7 >> $logdir/$logfile.log
 echo START TIME: $log_s7 | tee -a $logdir/$logfile.log 
 
 # Triphone3 option setting.
-tri3_trian_opt="--cmd $train_cmd"
-tri3_decode_opt="--nj $train_nj --cmd $decode_cmd"
+tri3_train_opt="--cmd $train_cmd"
+tri3_decode_opt="--nj $nj --cmd $decode_cmd"
 echo "Triphone3 trainig options: $tri3_train_opt"
-echo "Tirphone3 decoding options: $tir3_decode_opt"
+echo "Tirphone3 decoding options: $tri3_decode_opt"
 
 # Triphone3 training.
 steps/train_sat.sh $tri3_train_opt 2500 15000 $curdir/data/train $curdir/data/lang $curdir/exp/tri2_ali $curdir/exp/tri3
@@ -291,8 +294,8 @@ echo START TIME: $log_s8 | tee -a $logdir/$logfile.log
 # (Computer Speech and Language, 2011).
 
 # SGMM2 option setting.
-sgmm2_trian_opt="--cmd $train_cmd"
-sgmm2_decode_opt="--nj $train_nj --cmd $decode_cmd --transform-dir"
+sgmm2_train_opt="--cmd $train_cmd"
+sgmm2_decode_opt="--nj $nj --cmd $decode_cmd --transform-dir"
 echo "SGMM2 trainig options: $sgmm2_train_opt"
 echo "SGMM2 decoding options: $sgmm2_decode_opt"
 
@@ -309,7 +312,7 @@ utils/mkgraph.sh $curdir/data/lang $curdir/exp/sgmm $curdir/exp/sgmm/graph
 steps/align_sgmm2.sh $sgmm2_train_opt --transform-dir $curdir/exp/tri3_ali $curdir/data/train $curdir/data/lang $curdir/exp/sgmm $curdir/exp/sgmm_ali
 
 # Data decoding: train dataset.
-steps/decode_sgmm2.sh -$sgmm2_decode_opt $curdir/exp/tri3_ali $curdir/exp/sgmm/graph $curdir/data/train $curdir/exp/sgmm/decode_train
+steps/decode_sgmm2.sh $sgmm2_decode_opt $curdir/exp/tri3_ali $curdir/exp/sgmm/graph $curdir/data/train $curdir/exp/sgmm/decode_train
 
 # Data decoding: test dataset.
 steps/decode_sgmm2.sh $sgmm2_decode_opt $curdir/exp/tri3/decode_test $curdir/exp/sgmm/graph $curdir/data/test $curdir/exp/sgmm/decode_test
@@ -336,13 +339,13 @@ echo START TIME: $log_s9 | tee -a $logdir/$logfile.log
 # (Computer Speech and Language, 2011).
 
 # SGMM2 option setting.
-sgmmi_trian_opt="--cmd $train_cmd"
+sgmmi_train_opt="--cmd $train_cmd"
 sgmmi_decode_opt="--transform-dir"
 echo "SGMM2+MMI trainig options: $sgmmi_train_opt"
 echo "SGMM2+MMI decoding options: $sgmmi_decode_opt"
 
 # SGMM2+MMI training.
-steps/make_denlats_sgmm2.sh --nj "$train_nj" --sub-split 40 --transform-dir $curdir/exp/tri3_ali $curdir/data/train $curdir/data/lang $curdir/exp/sgmm_ali $curdir/exp/sgmm_denlats
+steps/make_denlats_sgmm2.sh --nj "$nj" --sub-split 40 --transform-dir $curdir/exp/tri3_ali $curdir/data/train $curdir/data/lang $curdir/exp/sgmm_ali $curdir/exp/sgmm_denlats
 steps/train_mmi_sgmm2.sh $sgmmi_train_opt $curdir/exp/tri3_ali $curdir/data/train $curdir/data/lang $curdir/exp/sgmm_ali $curdir/exp/sgmm_denlats $curdir/exp/sgmm_mmi
 
 # Data decoding: train dataset.
@@ -373,9 +376,9 @@ echo START TIME: $log_s10 | tee -a $logdir/$logfile.log
 # (Computer Speech and Language, 2011).
 
 # SGMM2 option setting.
-dnn1_trian_opt=""
-dnn1_decode_opt="--nj $train_nj --transform-dir"
-dnn_function:"train_tanh_fast.sh"
+dnn1_train_opt=""
+dnn1_decode_opt="--nj $nj --transform-dir"
+dnn_function="train_tanh_fast.sh"
 echo "DNN($dnn_function) trainig options: $dnn1_train_opt"
 echo "DNN($dnn_function) decoding options: $dnn1_decode_opt"
 
@@ -400,7 +403,9 @@ echo END TIME: $log_e10  | tee -a $logdir/$logfile.log
 echo PROCESS TIME: $taken10 sec  | tee -a $logdir/$logfile.log
 
 
-
+echo ====================================================================== | tee -a $logdir/$logfile.log 
+echo "                             RESULTS  	                	      " | tee -a $logdir/$logfile.log 
+echo ====================================================================== | tee -a $logdir/$logfile.log 
 
 
 
@@ -408,8 +413,6 @@ echo PROCESS TIME: $taken10 sec  | tee -a $logdir/$logfile.log
 ##########################################################
 # This is for final log.
 END=`date +%s`
-end5=`. $curdir/local/track_time.sh $start5 $end5`
 taken=`. $curdir/local/track_time.sh $STRAT $END`
-echo END TIME: $end5  | tee -a $logdir/$logfile.log 
 echo TOTAL TIME: $taken sec  | tee -a $logdir/$logfile.log 
 
