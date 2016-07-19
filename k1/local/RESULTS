@@ -1,0 +1,32 @@
+#!/bin/bash
+# 														EMCS Labs
+# 											Modified by	Hyungwon Yang
+# 														hyung8758@gmail.com
+
+# result script from timit example directory. 
+
+
+#if [ $# -ne 1 ]; then
+#   echo "List of decode folders should be assigned." && exit 1
+#fi
+
+
+
+
+for x in $curdir/exp/mono*/decode*; do
+	
+	#if [ -e $x ]; then 
+		[ -d $x ] && echo $x | grep "${1:-.*}" >/dev/null && grep WER $x/wer_* 2>/dev/null | utils/best_wer.sh
+	#fi
+done
+
+
+for x in $curdir/exp/mono*/decode*; do 
+	[ -d $x ] && echo $x | grep "${1:-.*}" >/dev/null && grep Sum $x/score_*/*.sys 2>/dev/null | utils/best_wer.sh
+
+done
+
+
+
+#exit 0
+

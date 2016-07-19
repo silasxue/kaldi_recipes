@@ -149,7 +149,7 @@ echo "Monophone trainig options: $mono_train_opt"
 echo "Monophone decoding options: $mono_decode_opt"
 
 # Monophone train.
-steps/train_mono.sh $mono_train_opt $curdir/data/train $curdir/data/lang $curdir/exp/mono ||  exit1
+#steps/train_mono.sh $mono_train_opt $curdir/data/train $curdir/data/lang $curdir/exp/mono ||  exit1
 
 # Graph structuring.
 # make HCLG graph (optional! train과는 무관, 오직 decode만을 위해.)

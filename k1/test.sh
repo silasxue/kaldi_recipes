@@ -1,8 +1,10 @@
 #!/bin/bash
 
-new1=string
-new2=nice
+new=("mfcc plp")
 
-for box in new1 new2; do
-	echo ${!box}
+declare -a arr=("mfcc" "plp")
+
+for x in ./${new[@]}; do
+	echo =====================
+	echo $x
 done
